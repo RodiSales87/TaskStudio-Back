@@ -47,7 +47,7 @@
     "typecheck": "tsc --noEmit --skipLibCheck"
   },
   "devDependencies": {
-    "@google/generative-ai": "^0.21.0",
+    "@google/generative-ai": "^0.24.1",
     "@swc/jest": "^0.2.34",
     "@types/bcryptjs": "^2.4.6",
     "@types/cookie-parser": "^1.4.6",
