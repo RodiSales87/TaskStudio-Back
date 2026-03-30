@@ -1,0 +1,55 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum TaskStatus {
+  PENDENTE
+  EM_ANDAMENTO
+  CONCLUIDA
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  
+  tasks     Task[]   // Relacionamento (1:N)
+}
+
+model Task {
+  id          String       @id @default(uuid())
+  title       String
+  description String?
+  deadline    DateTime?
+  status      TaskStatus   @default(PENDENTE)
+  createdAt   DateTime     @default(now())
+  
+  creatorId   String
+  creator     User         @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  
+  attachments Attachment[] // Relacionamento (1:N)
+}
+
+model Attachment {
+  id        String   @id @default(uuid())
+  url       String   // Caminho do arquivo ou URL do S3
+  filename  String
+  createdAt DateTime @default(now())
+
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
